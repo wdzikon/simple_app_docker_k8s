@@ -15,4 +15,4 @@ spec:
       port: 5001
       targetPort: 5001
       name: app-port
-  type: NodePort
+  type: LoadBalancer
