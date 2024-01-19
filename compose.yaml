@@ -6,8 +6,14 @@ services:
       context: ./api
     ports:
       - "5000:5000"
+    volumes:
+      - /data
+    env_file:
+      - .env
   app:
     build:
       context: ./app
     ports:
       - "5001:5001"
+    env_file:
+      - .env
