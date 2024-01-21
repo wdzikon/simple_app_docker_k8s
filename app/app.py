@@ -8,8 +8,7 @@ app = Flask(__name__)
 username = os.getenv("USERNAME")
 password = os.getenv("PASSWORD")
 
-# api = "http://api:5000/api/tasks"  # Docker Compose
-api = "http://myapp-service:5000/api/tasks"  # Kubernetes
+api = "http://api:5000/api/tasks"
 
 
 @app.route("/")

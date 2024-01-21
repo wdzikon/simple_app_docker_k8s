@@ -1,21 +1,21 @@
-# kubernetes/deployment.yaml
+# kubernetes/api.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapp-deployment
+  name: todo-api-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: myapp
+      app: todo-api
   template:
     metadata:
       labels:
-        app: myapp
+        app: todo-api
     spec:
       containers:
-      - name: api
-        image: woo45/myapp-api
+      - name: todo-api-container
+        image: woo45/todo-api
         env:
           - name: USERNAME
             valueFrom:
@@ -30,24 +30,21 @@ spec:
         volumeMounts:
           - name: task-pv-storage
             mountPath: /data
-                
-      - name: app
-        image: woo45/myapp-app
-        env:
-          - name: USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: secret-api-key
-                key: username
-          - name: PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: secret-api-key
-                key: password
-
       volumes:
         - name: task-pv-storage
           persistentVolumeClaim:
             claimName: db-pvc
-      
-        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  selector:
+    app: todo-api
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+      name: todo-api-port
+  type: LoadBalancer

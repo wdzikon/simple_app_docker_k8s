@@ -1,0 +1,43 @@
+# kubernets/app.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-app
+  template:
+    metadata:
+      labels:
+        app: todo-app
+    spec:
+      containers:
+      - name: todo-app-container
+        image: woo45/todo-app
+        env:
+          - name: USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: secret-api-key
+                key: username
+          - name: PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: secret-api-key
+                key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+spec:
+  selector:
+    app: todo-app
+  ports:
+    - protocol: TCP
+      port: 5001
+      targetPort: 5001
+      name: todo-app-port
+  type: LoadBalancer
